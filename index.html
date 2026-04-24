@@ -83,51 +83,53 @@
                     <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-trading-success opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-trading-success"></span></span>
                     <span id="liveClock" class="text-xs text-trading-success font-mono tracking-widest">--:--:--</span>
                 </div>
-                <h1 class="text-3xl font-extrabold text-white mb-4">דסק נתוני מניות</h1>
+                <h1 class="text-3xl font-extrabold text-white mb-6 drop-shadow-md">דסק נתוני מניות</h1>
                 
-                <div class="max-w-xl mx-auto mb-6">
-                    <p class="text-sm leading-relaxed text-trading-textMuted bg-trading-input/50 p-4 rounded-xl border border-trading-border/50 shadow-inner">
-                        הפק דוח נתוני מסחר מקיף על כל מניה תוך שניות בודדות. המערכת מנגישה נתוני שוק היסטוריים מדויקים בהתאם לטווח הזמנים שתגדיר, ומאפשרת ניתוח מגמות יעיל ומהיר. כל המידע מאוגד אוטומטית ומוגש לך בתצוגה מקדימה, עם אפשרות להורדה ישירה כקובץ CSV או המשך עבודה ב-Google Sheets.
+                <div class="max-w-lg mx-auto mb-8 bg-gradient-to-br from-slate-800/80 to-slate-900/80 p-5 rounded-xl border border-trading-primary/30 shadow-[0_0_15px_rgba(37,99,235,0.15)] relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-1 h-full bg-trading-primary"></div>
+                    <p class="text-sm leading-relaxed text-slate-200 text-right">
+                        <span class="font-bold text-blue-400 block mb-1 text-base">ברוכים הבאים למערכת</span>
+                        הפק דוח נתוני מסחר מקיף על כל מניה תוך שניות בודדות. המערכת מנגישה נתוני שוק היסטוריים מדויקים בהתאם לטווח הזמנים שתגדיר, ומאפשרת ניתוח מגמות יעיל ומהיר. כל המידע מאוגד אוטומטית ומוגש לך בתצוגה מקדימה, עם אפשרות להורדה ישירה כקובץ CSV או עבודה בענן.
                     </p>
                 </div>
-            </div>
+                </div>
 
             <form id="stockForm" class="space-y-6">
                 <div>
                     <label class="block text-sm font-medium mb-2 text-trading-textMuted">סימולי מניות (מופרדים בפסיק)</label>
-                    <input type="text" id="tickers" required placeholder="AAPL, MSFT, TSLA" class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary outline-none text-white font-mono dir-ltr text-left uppercase">
+                    <input type="text" id="tickers" required placeholder="AAPL, MSFT, TSLA" class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary outline-none text-white font-mono dir-ltr text-left uppercase shadow-inner">
                 </div>
 
                 <div class="grid grid-cols-2 gap-5">
                     <div>
                         <label class="block text-sm font-medium mb-2 text-trading-textMuted">תאריך התחלה</label>
-                        <input type="date" id="startDate" required class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary outline-none text-white font-mono">
+                        <input type="date" id="startDate" required class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary outline-none text-white font-mono shadow-inner">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-2 text-trading-textMuted">תאריך סיום</label>
-                        <input type="date" id="endDate" required class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary outline-none text-white font-mono">
+                        <input type="date" id="endDate" required class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary outline-none text-white font-mono shadow-inner">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium mb-2 text-trading-textMuted">תדירות נתונים</label>
-                    <select id="frequency" required class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary outline-none text-white appearance-none cursor-pointer">
+                    <select id="frequency" required class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary outline-none text-white appearance-none cursor-pointer shadow-inner">
                         <option value="1d">יומי (Daily)</option>
                         <option value="1wk">שבועי (Weekly)</option>
                         <option value="1mo">חודשי (Monthly)</option>
                     </select>
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full bg-trading-primary hover:bg-blue-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex justify-center items-center gap-3 mt-4">
+                <button type="submit" id="submitBtn" class="w-full bg-trading-primary hover:bg-blue-500 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all flex justify-center items-center gap-3 mt-4 transform hover:-translate-y-1">
                     <span id="btnText" class="text-lg">הפק דוח נתונים</span>
                     <svg id="loadingIcon" class="hidden animate-spin h-6 w-6 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 </button>
             </form>
 
-            <div id="warningContainer" class="hidden mt-6 p-4 bg-yellow-900/30 border border-yellow-600/50 text-yellow-300 rounded-xl text-sm text-center">
+            <div id="warningContainer" class="hidden mt-6 p-4 bg-yellow-900/30 border border-yellow-600/50 text-yellow-300 rounded-xl text-sm text-center shadow-[0_0_15px_rgba(245,158,11,0.1)]">
                 <span id="warningText" class="font-medium"></span>
             </div>
-            <div id="errorContainer" class="hidden mt-6 p-4 bg-red-900/40 border border-red-500/50 text-red-200 rounded-xl text-sm text-center">
+            <div id="errorContainer" class="hidden mt-6 p-4 bg-red-900/40 border border-red-500/50 text-red-200 rounded-xl text-sm text-center shadow-[0_0_15px_rgba(239,68,68,0.2)]">
                 <span id="errorText" class="font-medium"></span>
             </div>
 
@@ -135,7 +137,7 @@
                 
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-trading-success flex items-center justify-center shadow-lg"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                        <div class="w-10 h-10 rounded-full bg-trading-success flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.5)]"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
                         <h3 class="text-lg font-bold text-white">הנתונים מוכנים</h3>
                     </div>
                     
