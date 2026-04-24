@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>משיכת נתוני מניות - מערכת פיננסית מתקדמת</title>
+    <title>משיכת נתוני מניות - דסק מסחר מקצועי</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -55,7 +55,6 @@
         ::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; opacity: 0.6; transition: opacity 0.2s; }
         ::-webkit-calendar-picker-indicator:hover { opacity: 1; }
         
-        /* עיצוב פס גלילה מותאם אישית לטבלה */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(51, 65, 85, 0.8); border-radius: 4px; }
@@ -65,22 +64,12 @@
 <body class="text-trading-textBase font-sans antialiased min-h-screen flex flex-col">
 
     <div class="w-full bg-black/80 border-b border-trading-border overflow-hidden flex items-center h-12 text-sm font-mono dir-ltr whitespace-nowrap shadow-md relative z-10 text-left">
-        <div class="flex animate-marquee w-max">
+        <div class="flex animate-marquee w-max" id="tickerWrapper">
             <div class="flex space-x-8 px-4 items-center live-tickers">
-                <span class="text-trading-textMuted font-bold">S&P 500 <span class="text-trading-success ml-1">5,088.80 ▲</span></span>
-                <span class="text-trading-textMuted font-bold">NASDAQ <span class="text-trading-success ml-1">16,091.92 ▲</span></span>
-                <span class="text-trading-textMuted font-bold">AAPL <span class="text-trading-success live-price ml-1" data-base="172.50">172.50 ▲</span></span>
-                <span class="text-trading-textMuted font-bold">MSFT <span class="text-trading-success live-price ml-1" data-base="410.34">410.34 ▲</span></span>
-                <span class="text-trading-textMuted font-bold">TSLA <span class="text-trading-danger live-price ml-1" data-base="193.81">193.81 ▼</span></span>
-                <span class="text-trading-textMuted font-bold">NVDA <span class="text-trading-success live-price ml-1" data-base="788.17">788.17 ▲</span></span>
+                <span class="text-trading-textMuted">טוען נתוני שוק חיים...</span>
             </div>
             <div class="flex space-x-8 px-4 items-center live-tickers" aria-hidden="true">
-                <span class="text-trading-textMuted font-bold">S&P 500 <span class="text-trading-success ml-1">5,088.80 ▲</span></span>
-                <span class="text-trading-textMuted font-bold">NASDAQ <span class="text-trading-success ml-1">16,091.92 ▲</span></span>
-                <span class="text-trading-textMuted font-bold">AAPL <span class="text-trading-success live-price ml-1" data-base="172.50">172.50 ▲</span></span>
-                <span class="text-trading-textMuted font-bold">MSFT <span class="text-trading-success live-price ml-1" data-base="410.34">410.34 ▲</span></span>
-                <span class="text-trading-textMuted font-bold">TSLA <span class="text-trading-danger live-price ml-1" data-base="193.81">193.81 ▼</span></span>
-                <span class="text-trading-textMuted font-bold">NVDA <span class="text-trading-success live-price ml-1" data-base="788.17">788.17 ▲</span></span>
+                <span class="text-trading-textMuted">טוען נתוני שוק חיים...</span>
             </div>
         </div>
     </div>
@@ -156,7 +145,7 @@
                     </div>
                 </div>
 
-                <div class="mb-2 text-sm text-trading-textMuted">תצוגה מקדימה (עד 10 שורות):</div>
+                <div class="mb-2 text-sm text-trading-textMuted">תצוגה מקדימה (עד 10 שורות ראשונות):</div>
                 <div class="overflow-x-auto rounded-xl border border-trading-border bg-trading-input max-h-60 custom-scrollbar relative">
                     <table class="w-full text-xs text-right border-collapse whitespace-nowrap" id="previewTable">
                         <thead class="sticky top-0 bg-[#162032] text-trading-textBase shadow-md">
@@ -165,28 +154,53 @@
                         <tbody class="divide-y divide-trading-border/50 font-mono" id="tableBody"></tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     </div>
 
     <script>
         // *** הדבק כאן את ה-WEB APP URL שקיבלת מגוגל ***
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxP6MrJMvOhFQScQ5Uy6RKK3OBODAg2pZ1-dBecVb1CtHOmimv8WCwZEwCC25pBowgJSA/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzrXTJRUnFTSTXQmZXGwZDxhPlrjI9xuRzbQo2GJRvmZreG6P3c9qSSujSQAxBYLQ9H1g/exec';
 
         // שעון חי
         setInterval(() => { document.getElementById('liveClock').textContent = new Date().toLocaleTimeString('he-IL', { hour12: false }) + ' IDT'; }, 1000);
         
-        // סימולציית סרגל
-        setInterval(() => {
-            document.querySelectorAll('.live-price').forEach(el => {
-                let base = parseFloat(el.getAttribute('data-base'));
-                let newPrice = (base + (Math.random() * 0.4 - 0.2)).toFixed(2);
-                el.innerText = `${newPrice} ${el.innerText.includes('▲') ? '▲' : '▼'}`;
-            });
-        }, 3000);
+        // משיכת נתונים חיים לסרגל מניות בזמן טעינת האתר
+        const liveSymbols = ['^GSPC', '^IXIC', 'AAPL', 'MSFT', 'TSLA', 'NVDA', 'AMZN', 'META', 'GOOGL'];
+        const displayNames = {'^GSPC': 'S&P 500', '^IXIC': 'NASDAQ'};
 
-        let lastFetchedData = null; // שמירת הנתונים להורדה
+        async function fetchLiveTicker() {
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'liveTicker', tickers: liveSymbols })
+                });
+                const res = await response.json();
+                
+                if (res.status === 'success' && res.data) {
+                    let htmlStr = '';
+                    liveSymbols.forEach(sym => {
+                        if (res.data[sym]) {
+                            const name = displayNames[sym] || sym;
+                            const color = res.data[sym].direction === '▲' ? 'text-trading-success' : 'text-trading-danger';
+                            htmlStr += `<span class="text-trading-textMuted font-bold mx-5">${name} <span class="${color} ml-1">${res.data[sym].price} ${res.data[sym].direction} ${res.data[sym].change}%</span></span>`;
+                        }
+                    });
+                    
+                    if (htmlStr) {
+                        document.querySelectorAll('.live-tickers').forEach(el => el.innerHTML = htmlStr);
+                    }
+                }
+            } catch(e) {
+                console.error("Live ticker failed to load");
+            }
+        }
+        
+        // הפעלת המשיכה החיה מיד בטעינה
+        fetchLiveTicker();
+
+        let lastFetchedData = null; // משתנה לשמירת הנתונים להורדה
 
         // פונקציית הורדת CSV
         document.getElementById('downloadCsvBtn').addEventListener('click', () => {
@@ -230,20 +244,18 @@
 
             try {
                 const response = await fetch(WEB_APP_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
-                if (!response.ok) throw new Error('שגיאת רשת.');
+                if (!response.ok) throw new Error('שגיאת רשת בגישה לשרת גוגל. בדוק חיבור אינטרנט.');
                 
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    lastFetchedData = data.data; // שמירת המערך בזיכרון
+                    lastFetchedData = data.data; 
                     document.getElementById('sheetLink').href = data.sheetUrl;
                     
-                    // בניית הטבלה
                     if (data.data && data.data.length > 0) {
                         const headersHTML = data.data[0].map(h => `<th class="px-4 py-3 border-b border-trading-border">${h}</th>`).join('');
                         document.getElementById('tableHeader').innerHTML = headersHTML;
                         
-                        // מציגים רק את ה-10 שורות הראשונות
                         const rowsHTML = data.data.slice(1, 11).map(row => 
                             `<tr class="hover:bg-white/5 text-trading-textMuted">${row.map(cell => `<td class="px-4 py-2">${cell}</td>`).join('')}</tr>`
                         ).join('');
