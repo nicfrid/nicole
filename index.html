@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>משיכת נתוני מניות - מערכת פיננסית חכמה</title>
+    <title>משיכת נתוני מניות - מערכת פיננסית מתקדמת</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -15,18 +15,29 @@
                 extend: {
                     fontFamily: {
                         sans: ['Heebo', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'], // פונט מיוחד למספרים ולטיקרים
                     },
                     colors: {
                         trading: {
-                            bg: '#0b1121',       // רקע כללי כהה מאוד
-                            card: '#1e293b',     // רקע הכרטיסייה
-                            primary: '#3b82f6',  // כחול מקצועי
-                            success: '#10b981',  // ירוק מניות (עולה)
-                            danger: '#ef4444',   // אדום מניות (יורד)
-                            textBase: '#f8fafc', // טקסט ראשי בהיר
-                            textMuted: '#94a3b8',// טקסט משני משותק
-                            border: '#334155',   // גבולות עדינים
-                            input: '#0f172a'     // רקע לשדות הזנה
+                            bg: '#050b14',       
+                            card: 'rgba(15, 23, 42, 0.75)', // שקיפות לאפקט זכוכית
+                            primary: '#2563eb',  
+                            success: '#10b981',  
+                            danger: '#ef4444',   
+                            warning: '#f59e0b',
+                            textBase: '#f8fafc', 
+                            textMuted: '#94a3b8',
+                            border: 'rgba(51, 65, 85, 0.5)',   
+                            input: 'rgba(15, 23, 42, 0.6)'     
+                        }
+                    },
+                    animation: {
+                        'marquee': 'marquee 35s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' }, // מתאים למבנה הכפול שיצרנו
                         }
                     }
                 }
@@ -34,128 +45,216 @@
         }
     </script>
     <style>
-        /* הסתרת אייקון היומן המובנה של הדפדפן בעיצוב הכהה (אופציונלי אך נראה טוב יותר) */
+        /* הגדרת תמונת הרקע הפיננסית */
+        body {
+            background-color: #050b14;
+            background-image: 
+                linear-gradient(to bottom, rgba(5, 11, 20, 0.85), rgba(5, 11, 20, 0.95)),
+                url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
         ::-webkit-calendar-picker-indicator {
             filter: invert(1);
             cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        ::-webkit-calendar-picker-indicator:hover {
+            opacity: 1;
+        }
+
+        /* הסתרת פס הגלילה של הסרגל הרץ */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  
+            scrollbar-width: none;  
         }
     </style>
 </head>
-<body class="bg-trading-bg text-trading-textBase font-sans antialiased min-h-screen flex items-center justify-center p-4">
+<body class="text-trading-textBase font-sans antialiased min-h-screen flex flex-col">
 
-    <div class="bg-trading-card rounded-2xl shadow-2xl w-full max-w-lg p-8 border border-trading-border relative overflow-hidden">
+    <div class="w-full bg-black/80 border-b border-trading-border overflow-hidden flex items-center h-12 text-sm font-mono dir-ltr whitespace-nowrap shadow-md relative z-10 text-left">
+        <div class="flex animate-marquee w-max">
+            <div class="flex space-x-8 px-4 items-center live-tickers">
+                <span class="text-trading-textMuted font-bold">S&P 500 <span class="text-trading-success ml-1">5,088.80 ▲ 0.8%</span></span>
+                <span class="text-trading-textMuted font-bold">NASDAQ <span class="text-trading-success ml-1">16,091.92 ▲ 1.1%</span></span>
+                <span class="text-trading-textMuted font-bold">AAPL <span class="text-trading-success live-price ml-1" data-base="172.50">172.50 ▲ 0.4%</span></span>
+                <span class="text-trading-textMuted font-bold">MSFT <span class="text-trading-success live-price ml-1" data-base="410.34">410.34 ▲ 1.2%</span></span>
+                <span class="text-trading-textMuted font-bold">TSLA <span class="text-trading-danger live-price ml-1" data-base="193.81">193.81 ▼ 2.1%</span></span>
+                <span class="text-trading-textMuted font-bold">NVDA <span class="text-trading-success live-price ml-1" data-base="788.17">788.17 ▲ 3.5%</span></span>
+                <span class="text-trading-textMuted font-bold">GOOGL <span class="text-trading-danger live-price ml-1" data-base="138.94">138.94 ▼ 0.2%</span></span>
+                <span class="text-trading-textMuted font-bold">AMZN <span class="text-trading-success live-price ml-1" data-base="174.58">174.58 ▲ 0.9%</span></span>
+            </div>
+            <div class="flex space-x-8 px-4 items-center live-tickers" aria-hidden="true">
+                <span class="text-trading-textMuted font-bold">S&P 500 <span class="text-trading-success ml-1">5,088.80 ▲ 0.8%</span></span>
+                <span class="text-trading-textMuted font-bold">NASDAQ <span class="text-trading-success ml-1">16,091.92 ▲ 1.1%</span></span>
+                <span class="text-trading-textMuted font-bold">AAPL <span class="text-trading-success live-price ml-1" data-base="172.50">172.50 ▲ 0.4%</span></span>
+                <span class="text-trading-textMuted font-bold">MSFT <span class="text-trading-success live-price ml-1" data-base="410.34">410.34 ▲ 1.2%</span></span>
+                <span class="text-trading-textMuted font-bold">TSLA <span class="text-trading-danger live-price ml-1" data-base="193.81">193.81 ▼ 2.1%</span></span>
+                <span class="text-trading-textMuted font-bold">NVDA <span class="text-trading-success live-price ml-1" data-base="788.17">788.17 ▲ 3.5%</span></span>
+                <span class="text-trading-textMuted font-bold">GOOGL <span class="text-trading-danger live-price ml-1" data-base="138.94">138.94 ▼ 0.2%</span></span>
+                <span class="text-trading-textMuted font-bold">AMZN <span class="text-trading-success live-price ml-1" data-base="174.58">174.58 ▲ 0.9%</span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-grow flex items-center justify-center p-4">
         
-        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-trading-primary to-trading-success"></div>
-
-        <div class="mb-8 text-center mt-2">
-            <h1 class="text-3xl font-extrabold text-white mb-2 tracking-tight">דוח מניות היסטורי</h1>
-            <p class="text-sm text-trading-textMuted">הזן סימולים כדי לייצר גיליון נתונים מאוחד</p>
-        </div>
-
-        <form id="stockForm" class="space-y-6">
+        <div class="bg-trading-card backdrop-blur-xl rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.5)] w-full max-w-lg p-8 border border-trading-border relative overflow-hidden">
             
-            <div>
-                <label for="tickers" class="block text-sm font-medium mb-2 text-trading-textMuted">סימולי מניות (מופרדים בפסיק)</label>
-                <input type="text" id="tickers" name="tickers" placeholder="לדוגמה: AAPL, MSFT, TSLA" required
-                    class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary focus:border-transparent outline-none transition-all dir-ltr text-left uppercase text-white font-mono tracking-wider shadow-inner">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-trading-primary via-indigo-500 to-trading-success"></div>
+
+            <div class="mb-8 text-center mt-2">
+                <div class="flex justify-center items-center gap-2 mb-2">
+                    <span class="relative flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-trading-success opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-trading-success"></span>
+                    </span>
+                    <span id="liveClock" class="text-xs text-trading-success font-mono tracking-widest">--:--:--</span>
+                </div>
+                <h1 class="text-3xl font-extrabold text-white mb-2 tracking-tight drop-shadow-md">דסק נתוני מניות</h1>
+                <p class="text-sm text-trading-textMuted">הזן סימולים כדי לייצר גיליון נתונים מאוחד</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-5">
+            <form id="stockForm" class="space-y-6 relative z-10">
+                
                 <div>
-                    <label for="startDate" class="block text-sm font-medium mb-2 text-trading-textMuted">תאריך התחלה</label>
-                    <input type="date" id="startDate" name="startDate" required
-                        class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary focus:border-transparent outline-none text-white transition-all">
+                    <label for="tickers" class="block text-sm font-medium mb-2 text-trading-textMuted">סימולי מניות (מופרדים בפסיק)</label>
+                    <input type="text" id="tickers" name="tickers" placeholder="לדוגמה: AAPL, MSFT, TSLA" required
+                        class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary focus:border-transparent outline-none transition-all dir-ltr text-left uppercase text-white font-mono tracking-wider shadow-inner placeholder-slate-600">
+                </div>
+
+                <div class="grid grid-cols-2 gap-5">
+                    <div>
+                        <label for="startDate" class="block text-sm font-medium mb-2 text-trading-textMuted">תאריך התחלה</label>
+                        <input type="date" id="startDate" name="startDate" required
+                            class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary focus:border-transparent outline-none text-white transition-all font-mono">
+                    </div>
+
+                    <div>
+                        <label for="endDate" class="block text-sm font-medium mb-2 text-trading-textMuted">תאריך סיום</label>
+                        <input type="date" id="endDate" name="endDate" required
+                            class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary focus:border-transparent outline-none text-white transition-all font-mono">
+                    </div>
                 </div>
 
                 <div>
-                    <label for="endDate" class="block text-sm font-medium mb-2 text-trading-textMuted">תאריך סיום</label>
-                    <input type="date" id="endDate" name="endDate" required
-                        class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary focus:border-transparent outline-none text-white transition-all">
+                    <label for="frequency" class="block text-sm font-medium mb-2 text-trading-textMuted">תדירות נתונים</label>
+                    <select id="frequency" name="frequency" required
+                        class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary focus:border-transparent outline-none text-white transition-all appearance-none cursor-pointer">
+                        <option value="1d">יומי (Daily)</option>
+                        <option value="1wk">שבועי (Weekly)</option>
+                        <option value="1mo">חודשי (Monthly)</option>
+                    </select>
                 </div>
+
+                <button type="submit" id="submitBtn" 
+                    class="w-full bg-gradient-to-r from-blue-600 to-trading-primary hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all flex justify-center items-center gap-3 mt-4 transform hover:-translate-y-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span id="btnText" class="text-lg">הפק דוח נתונים</span>
+                    
+                    <svg id="loadingIcon" class="hidden animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </form>
+
+            <div id="warningContainer" class="hidden mt-6 p-4 bg-yellow-900/30 border border-yellow-600/50 text-yellow-300 rounded-xl text-sm text-center flex flex-col items-center gap-2 shadow-[0_0_15px_rgba(245,158,11,0.1)] backdrop-blur-sm">
+                <svg class="w-6 h-6 text-yellow-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <span id="warningText" class="font-medium"></span>
             </div>
 
-            <div>
-                <label for="frequency" class="block text-sm font-medium mb-2 text-trading-textMuted">תדירות נתונים</label>
-                <select id="frequency" name="frequency" required
-                    class="w-full px-4 py-3 bg-trading-input border border-trading-border rounded-xl focus:ring-2 focus:ring-trading-primary focus:border-transparent outline-none text-white transition-all appearance-none cursor-pointer">
-                    <option value="1d">יומי (Daily)</option>
-                    <option value="1wk">שבועי (Weekly)</option>
-                    <option value="1mo">חודשי (Monthly)</option>
-                </select>
+            <div id="errorContainer" class="hidden mt-6 p-4 bg-red-900/40 border border-red-500/50 text-red-200 rounded-xl text-sm text-center flex flex-col items-center gap-2 shadow-[0_0_15px_rgba(239,68,68,0.2)] backdrop-blur-sm">
+                <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span id="errorText" class="font-medium"></span>
             </div>
 
-            <button type="submit" id="submitBtn" 
-                class="w-full bg-trading-primary hover:bg-blue-600 text-white font-bold py-4 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all flex justify-center items-center gap-3 mt-2 transform hover:-translate-y-0.5">
-                <span id="btnText" class="text-lg">הפק דוח נתונים</span>
-                <svg id="loadingIcon" class="hidden animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            </button>
-        </form>
+            <div id="resultContainer" class="hidden mt-8 pt-6 border-t border-trading-border text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-trading-success mb-4 shadow-[0_0_25px_rgba(16,185,129,0.5)]">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">פעולה הושלמה בהצלחה</h3>
+                <p class="text-sm text-trading-textMuted mb-6">גיליון הנתונים המאוחד שלך מוכן לעבודה.</p>
+                
+                <a id="sheetLink" href="#" target="_blank" rel="noopener noreferrer"
+                    class="inline-block w-full bg-trading-success hover:bg-emerald-500 text-white font-bold py-4 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all text-decoration-none text-lg transform hover:-translate-y-1">
+                    פתח גיליון ב-Google Sheets
+                </a>
+            </div>
 
-        <div id="errorContainer" class="hidden mt-6 p-4 bg-red-900/40 border border-red-500/50 text-red-200 rounded-xl text-sm text-center flex flex-col items-center gap-2">
-            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span id="errorText"></span>
         </div>
-
-        <div id="resultContainer" class="hidden mt-8 pt-8 border-t border-trading-border text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-trading-success/20 mb-4 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-                <svg class="w-8 h-8 text-trading-success" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">הנתונים נמשכו בהצלחה!</h3>
-            <p class="text-sm text-trading-textMuted mb-6">גיליון הנתונים המאוחד שלך מוכן לעבודה.</p>
-            
-            <a id="sheetLink" href="#" target="_blank" rel="noopener noreferrer"
-                class="inline-block w-full bg-trading-success hover:bg-emerald-600 text-white font-bold py-4 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all text-decoration-none text-lg transform hover:-translate-y-0.5">
-                פתח גיליון מניות ב-Google Sheets
-            </a>
-        </div>
-
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwDK_hPUTIRNHN86Ld-AVXObIHSeJiHf21UQ-TZwPzyKm-RYfWGDHP9Gsu-SRq2gj9_ZA/exec';
+        // *** חובה להדביק פה את הכתובת של הסקריפט שלך (WEB APP URL) ***
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzVhp4XNrfxT6bvcLy5VV4_viSCRebMGdN03QpwVMGcGTOuSzKRlcfF2aBSDf54s3LV8g/exec';
+
+        // --- סקריפט לאנימציית שעון ומניות רצות ---
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('liveClock').textContent = now.toLocaleTimeString('he-IL', { hour12: false }) + ' IDT';
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // סימולציה של שינוי מחירים קל בסרגל כדי שייראה חי (אופציונלי)
+        setInterval(() => {
+            document.querySelectorAll('.live-price').forEach(el => {
+                let base = parseFloat(el.getAttribute('data-base'));
+                let change = (Math.random() * 0.4 - 0.2); // שינוי של עד 0.2$
+                let newPrice = (base + change).toFixed(2);
+                let text = el.innerText.split(' ');
+                el.innerText = `${newPrice} ${text[1]} ${text[2]}`;
+            });
+        }, 3000);
+        // ----------------------------------------
 
         const form = document.getElementById('stockForm');
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
         const loadingIcon = document.getElementById('loadingIcon');
+        
         const resultContainer = document.getElementById('resultContainer');
         const sheetLink = document.getElementById('sheetLink');
+        
         const errorContainer = document.getElementById('errorContainer');
         const errorText = document.getElementById('errorText');
+        
+        const warningContainer = document.getElementById('warningContainer');
+        const warningText = document.getElementById('warningText');
 
-        // קביעת תאריך ברירת מחדל (היום ושנה אחורה)
         const today = new Date();
         const lastYear = new Date(new Date().setFullYear(today.getFullYear() - 1));
         document.getElementById('endDate').valueAsDate = today;
         document.getElementById('startDate').valueAsDate = lastYear;
 
-        // פונקציית עזר להצגת שגיאות
         function showError(msg) {
-            errorText.textContent = msg;
+            const cleanMsg = msg.replace('Error:', '').trim();
+            errorText.textContent = cleanMsg;
             errorContainer.classList.remove('hidden');
         }
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             
-            // איפוס שגיאות והודעות קודמות
             errorContainer.classList.add('hidden');
             resultContainer.classList.add('hidden');
+            warningContainer.classList.add('hidden');
 
             const startDateInput = document.getElementById('startDate').value;
             const endDateInput = document.getElementById('endDate').value;
             const rawTickers = document.getElementById('tickers').value;
 
-            // --- ולידציית צד לקוח (תאריכים ומניות) ---
-            
             const startDate = new Date(startDateInput);
             const endDate = new Date(endDateInput);
             const currentDate = new Date();
             
-            // איפוס שעות כדי להשוות רק תאריכים
             currentDate.setHours(0, 0, 0, 0); 
             endDate.setHours(0,0,0,0);
 
@@ -163,20 +262,17 @@
                 showError('תאריך ההתחלה לא יכול להיות מאוחר מתאריך הסיום.');
                 return;
             }
-
             if (endDate > currentDate) {
                 showError('תאריך הסיום לא יכול להיות תאריך עתידי.');
                 return;
             }
 
-            // בדיקה שהוזנו רק אותיות באנגלית, פסיקים ורווחים
             const tickersRegex = /^[A-Za-z0-9, \.]+$/;
             if (!tickersRegex.test(rawTickers)) {
                 showError('אנא הזן סימולי מניות תקינים באנגלית בלבד (למשל: AAPL, TSLA).');
                 return;
             }
 
-            // ניקוי המערך
             const tickersArray = rawTickers.split(',').map(t => t.trim().toUpperCase()).filter(t => t !== '');
             if (tickersArray.length === 0) {
                 showError('לא הוזנו מניות. אנא הזן לפחות סימול אחד.');
@@ -190,10 +286,9 @@
                 frequency: document.getElementById('frequency').value
             };
 
-            // מצב טעינה
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-75', 'cursor-wait');
-            btnText.textContent = 'מושך נתונים מהשווקים...';
+            btnText.textContent = 'מייצר סביבת עבודה...';
             loadingIcon.classList.remove('hidden');
 
             try {
@@ -203,24 +298,23 @@
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) {
-                    throw new Error('שגיאת רשת. בדוק את החיבור שלך.');
-                }
+                if (!response.ok) throw new Error('שגיאת רשת בגישה לשרת גוגל. בדוק חיבור אינטרנט.');
 
                 const data = await response.json();
 
                 if (data.status === 'success') {
                     sheetLink.href = data.sheetUrl;
                     resultContainer.classList.remove('hidden');
-                } else {
-                    // טיפול חכם בשגיאות שמגיעות מהשרת (למשל, מניה לא קיימת)
-                    let serverMsg = data.message || 'אירעה שגיאה בשרת.';
                     
-                    if (serverMsg.includes('Failed to fetch data for')) {
-                        // חילוץ שם המניה שנכשלה מתוך הודעת השגיאה של השרת
-                        const match = serverMsg.match(/for ([A-Z0-9]+)/);
-                        const failedTicker = match ? match[1] : 'שהזנת';
-                        throw new Error(`המניה ${failedTicker} לא קיימת, נמחקה או שאין עבורה נתונים בטווח התאריכים. ודא שהסימול תקין.`);
+                    // בדיקה אם השרת החזיר לנו מניות שנכשלו
+                    if (data.failedTickers && data.failedTickers.length > 0) {
+                        warningText.textContent = `שים לב: הגיליון נוצר, אך לא נמצאו נתונים עבור: ${data.failedTickers.join(', ')}`;
+                        warningContainer.classList.remove('hidden');
+                    }
+                } else {
+                    let serverMsg = data.message || 'אירעה שגיאה בשרת.';
+                    if (serverMsg.includes('אף אחת מהמניות')) {
+                        throw new Error('אף אחת מהמניות שהזנת לא נמצאה. ודא שהסימולים תקינים.');
                     } else {
                         throw new Error(serverMsg);
                     }
@@ -229,7 +323,6 @@
             } catch (error) {
                 showError(error.message);
             } finally {
-                // שחרור כפתור
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-75', 'cursor-wait');
                 btnText.textContent = 'הפק דוח נתונים';
