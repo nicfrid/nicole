@@ -83,8 +83,13 @@
                     <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-trading-success opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-trading-success"></span></span>
                     <span id="liveClock" class="text-xs text-trading-success font-mono tracking-widest">--:--:--</span>
                 </div>
-                <h1 class="text-3xl font-extrabold text-white mb-2">דסק נתוני מניות</h1>
-                <p class="text-sm text-trading-textMuted">הזן סימולים כדי לייצר גיליון נתונים מאוחד</p>
+                <h1 class="text-3xl font-extrabold text-white mb-4">דסק נתוני מניות</h1>
+                
+                <div class="max-w-xl mx-auto mb-6">
+                    <p class="text-sm leading-relaxed text-trading-textMuted bg-trading-input/50 p-4 rounded-xl border border-trading-border/50 shadow-inner">
+                        הפק דוח נתוני מסחר מקיף על כל מניה תוך שניות בודדות. המערכת מנגישה נתוני שוק היסטוריים מדויקים בהתאם לטווח הזמנים שתגדיר, ומאפשרת ניתוח מגמות יעיל ומהיר. כל המידע מאוגד אוטומטית ומוגש לך בתצוגה מקדימה, עם אפשרות להורדה ישירה כקובץ CSV או המשך עבודה ב-Google Sheets.
+                    </p>
+                </div>
             </div>
 
             <form id="stockForm" class="space-y-6">
@@ -206,7 +211,7 @@
         document.getElementById('downloadCsvBtn').addEventListener('click', () => {
             if (!lastFetchedData) return;
             const csvContent = lastFetchedData.map(row => row.join(",")).join("\n");
-            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' }); // הוספת BOM לעברית במידת הצורך
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' }); // הוספת BOM לעברית
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = `Market_Data_${new Date().toISOString().slice(0,10)}.csv`;
